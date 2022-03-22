@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from hashlib import sha1
 import requests
 import re
@@ -11,6 +13,9 @@ emails_path="./emails.txt"
 
 hashes=list()
 emails=list()
+
+def hash_password():
+    return sha1(password.encode("utf-8")).hexdigest()
 
 def populate_hashes():
     global hashes
@@ -26,9 +31,6 @@ def populate_emails():
     with open(emails_path, "r") as f:
         for line in f:
             emails.append(line[:-1])
-
-def hash_password():
-    return sha1(password.encode("utf-8")).hexdigest()
 
 def test_password(key, value):
     response=requests.get("https://api.pwnedpasswords.com/range/"+key)
@@ -57,6 +59,9 @@ def argparser():
     return parser.parse_args()
 
 if __name__=="__main__":
+    if sys.version_info[0]<3:
+        raise Exception("Must be run with Python 3")
+
     args=argparser()
 
     if args.hashes:
